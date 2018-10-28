@@ -5,13 +5,13 @@ import (
 	"time"
 )
 
-// ReaderWriterErorr represent error on both of reader and writer
-type ReaderWriterErorr struct {
+// ReaderWriterError represent error on both of reader and writer
+type ReaderWriterError struct {
 	Reader error
 	Writer error
 }
 
-func (rwe ReaderWriterErorr) Error() string {
+func (rwe ReaderWriterError) Error() string {
 	rErr := ""
 	if rwe.Reader != nil {
 		rErr = rwe.Reader.Error()
@@ -20,7 +20,17 @@ func (rwe ReaderWriterErorr) Error() string {
 	if rwe.Writer != nil {
 		wErr = rwe.Writer.Error()
 	}
-	return "reader: " + rErr + "; writer: " + wErr
+	ret := ""
+	if rErr != "" {
+		ret += "reader(" + rErr + ")"
+	}
+	if wErr != "" {
+		if ret != "" {
+			ret += ", "
+		}
+		ret += "writer(" + wErr + ")"
+	}
+	return ret
 }
 
 type stringaddr struct {

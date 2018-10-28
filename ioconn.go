@@ -34,7 +34,7 @@ func New(config Config) net.Conn {
 }
 
 func (ic *ioconn) Close() error {
-	ret := ReaderWriterErorr{}
+	ret := ReaderWriterError{}
 	if item, ok := ic.Reader.(io.Closer); ok {
 		ret.Reader = item.Close()
 	}
@@ -56,7 +56,7 @@ func (ic *ioconn) RemoteAddr() net.Addr {
 }
 
 func (ic *ioconn) SetDeadline(t time.Time) error {
-	ret := ReaderWriterErorr{}
+	ret := ReaderWriterError{}
 	if item, ok := ic.Reader.(setdeadline); ok {
 		ret.Reader = item.SetDeadline(t)
 	} else {
