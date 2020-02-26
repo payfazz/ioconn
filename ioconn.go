@@ -20,12 +20,12 @@ func New(config Config) net.Conn {
 		Reader: config.Reader,
 		Writer: config.Writer,
 	}
-	if item, ok := ret.Writer.(localaddr); ok && config.LocalName == "" {
+	if item, ok := ret.Writer.(interface{ LocalAddr() net.Addr }); ok && config.LocalName == "" {
 		ret.localaddr = item.LocalAddr()
 	} else {
 		ret.localaddr = stringaddr{"io.Writer", config.LocalName}
 	}
-	if item, ok := ret.Reader.(remoteaddr); ok && config.LocalName == "" {
+	if item, ok := ret.Reader.(interface{ RemoteAddr() net.Addr }); ok && config.LocalName == "" {
 		ret.remoteaddr = item.RemoteAddr()
 	} else {
 		ret.remoteaddr = stringaddr{"io.Reader", config.RemoteName}
@@ -57,12 +57,12 @@ func (ic *ioconn) RemoteAddr() net.Addr {
 
 func (ic *ioconn) SetDeadline(t time.Time) error {
 	ret := ReaderWriterError{}
-	if item, ok := ic.Reader.(setdeadline); ok {
+	if item, ok := ic.Reader.(interface{ SetDeadline(t time.Time) error }); ok {
 		ret.Reader = item.SetDeadline(t)
 	} else {
 		ret.Reader = fmt.Errorf("reader doesn't implement SetDeadLine")
 	}
-	if item, ok := ic.Writer.(setdeadline); ok {
+	if item, ok := ic.Writer.(interface{ SetDeadline(t time.Time) error }); ok {
 		ret.Writer = item.SetDeadline(t)
 	} else {
 		ret.Writer = fmt.Errorf("writer doesn't implement SetDeadLine")
@@ -74,14 +74,14 @@ func (ic *ioconn) SetDeadline(t time.Time) error {
 }
 
 func (ic *ioconn) SetReadDeadline(t time.Time) error {
-	if item, ok := ic.Reader.(setreaddeadline); ok {
+	if item, ok := ic.Reader.(interface{ SetReadDeadline(t time.Time) error }); ok {
 		return item.SetReadDeadline(t)
 	}
 	return fmt.Errorf("reader doesn't implement SetReadDeadline")
 }
 
 func (ic *ioconn) SetWriteDeadline(t time.Time) error {
-	if item, ok := ic.Reader.(setwritedeadline); ok {
+	if item, ok := ic.Reader.(interface{ SetWriteDeadline(t time.Time) error }); ok {
 		return item.SetWriteDeadline(t)
 	}
 	return fmt.Errorf("reader doesn't implement SetWriteDeadline")

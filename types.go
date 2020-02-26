@@ -1,10 +1,5 @@
 package ioconn
 
-import (
-	"net"
-	"time"
-)
-
 // ReaderWriterError represent error on both of reader and writer
 type ReaderWriterError struct {
 	Reader error
@@ -44,24 +39,4 @@ func (sa stringaddr) Network() string {
 
 func (sa stringaddr) String() string {
 	return sa.name
-}
-
-type localaddr interface {
-	LocalAddr() net.Addr
-}
-
-type remoteaddr interface {
-	RemoteAddr() net.Addr
-}
-
-type setdeadline interface {
-	SetDeadline(t time.Time) error
-}
-
-type setreaddeadline interface {
-	SetReadDeadline(t time.Time) error
-}
-
-type setwritedeadline interface {
-	SetWriteDeadline(t time.Time) error
 }
